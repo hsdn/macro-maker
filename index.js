@@ -2,7 +2,7 @@
 
 /*
 	==========================
-	UPDATED VERSION 19.10.2021
+	UPDATED VERSION 29.10.2021
 	==========================
 */
 
@@ -489,7 +489,7 @@ module.exports = function MacroMaker(mod) {
 		}
 	});
 
-	mod.hook("C_PRESS_SKILL", 4, { "order": Infinity }, event => {
+	mod.hook("C_PRESS_SKILL", 4, { "order": -Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled) return;
 
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
@@ -500,7 +500,7 @@ module.exports = function MacroMaker(mod) {
 		}
 	});
 
-	mod.hook("S_CANNOT_START_SKILL", 4, { "order": Infinity }, event => {
+	mod.hook("S_CANNOT_START_SKILL", 4, { "order": -Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled) return;
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
 		const skillAction = macroConfig ? macroConfig.skills[skillBaseId] : undefined;
@@ -510,7 +510,7 @@ module.exports = function MacroMaker(mod) {
 		}
 	});
 
-	mod.hook("C_CANCEL_SKILL", 3, { "order": Infinity }, event => {
+	mod.hook("C_CANCEL_SKILL", 3, { "order": -Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled) return;
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
 		const skillAction = macroConfig ? macroConfig.skills[skillBaseId] : undefined;
@@ -521,7 +521,7 @@ module.exports = function MacroMaker(mod) {
 	});
 
 	/*
-	mod.hook("S_GRANT_SKILL", 3, { "order": Infinity }, event => {
+	mod.hook("S_GRANT_SKILL", 3, { "order": -Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled) return;
 
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
@@ -532,11 +532,6 @@ module.exports = function MacroMaker(mod) {
 		}
 	});
 	*/
-
-	mod.hook("S_PLAYER_STAT_UPDATE", 17, { "order": Infinity }, event => {
-		if (!mod.settings.enabled) return;
-		playerStats = event;
-	});
 
 	mod.hook("S_START_COOLTIME_SKILL", 3, { "order": Infinity }, event => {
 		if (!mod.settings.enabled) return;
@@ -555,6 +550,11 @@ module.exports = function MacroMaker(mod) {
 		if (!abnormalDebug || event.target !== mod.game.me.gameId || !(event.id in mod.game.me.abnormalities)) return;
 		const abnormality = mod.game.me.abnormalities[event.id];
 		command.message(`${abnormality.data.name || "Unnamed"} (ID: ${abnormality.id} duration: ${abnormality.data.time})`);
+	});
+
+	mod.hook("S_PLAYER_STAT_UPDATE", 17, { "order": Infinity, "filter": { "fake": null } }, event => {
+		if (!mod.settings.enabled) return;
+		playerStats = event;
 	});
 
 	this.saveState = () => {
