@@ -72,7 +72,11 @@ module.exports = function MacroMaker(mod) {
 	mod.setTimeout(() => {
 		if (mod.game.isIngame && !reloading && !macroFile) {
 			let currentPath = null;
-			if (fs.existsSync(currentPath = path.join(__dirname, "macros", `${mod.game.me.name}-${mod.game.me.serverId}.js`)) || fs.existsSync(currentPath = path.join(__dirname, "macros", `${mod.game.me.name}.js`)) || fs.existsSync(currentPath = path.join(__dirname, "macros", `${DataCenter_ClassNames[mod.game.me.class]}.js`))) {
+
+			if (fs.existsSync(currentPath = path.join(__dirname, "macros", `${mod.game.me.name}-${mod.game.me.serverId}.js`)) ||
+				fs.existsSync(currentPath = path.join(__dirname, "macros", `${mod.game.me.name}.js`)) ||
+				fs.existsSync(currentPath = path.join(__dirname, "macros", `${DataCenter_ClassNames[mod.game.me.class]}.js`))
+			) {
 				macroFile = currentPath;
 				compileAndRunMacro();
 			}
@@ -85,7 +89,11 @@ module.exports = function MacroMaker(mod) {
 			ahk.destructor();
 			ahk = null;
 		}
-		if (fs.existsSync(currentPath = path.join(__dirname, "macros", `${mod.game.me.name}-${mod.game.me.serverId}.js`)) || fs.existsSync(currentPath = path.join(__dirname, "macros", `${mod.game.me.name}.js`)) || fs.existsSync(currentPath = path.join(__dirname, "macros", `${DataCenter_ClassNames[mod.game.me.class]}.js`))) {
+
+		if (fs.existsSync(currentPath = path.join(__dirname, "macros", `${mod.game.me.name}-${mod.game.me.serverId}.js`)) ||
+			fs.existsSync(currentPath = path.join(__dirname, "macros", `${mod.game.me.name}.js`)) ||
+			fs.existsSync(currentPath = path.join(__dirname, "macros", `${DataCenter_ClassNames[mod.game.me.class]}.js`))
+		) {
 			macroFile = currentPath;
 			compileAndRunMacro();
 		}
@@ -95,6 +103,7 @@ module.exports = function MacroMaker(mod) {
 		if (ahk) {
 			ahk.destructor();
 			ahk = null;
+
 			hotkeyActions = {};
 			skillActions = {};
 			playerStats = {},
@@ -152,12 +161,13 @@ module.exports = function MacroMaker(mod) {
 				ahk = null;
 			}
 
-			command.message(`Macros are now ${mod.settings.enabled ? "en" : "dis"}abled.`);
+			command.message(`Macros are now ${mod.settings.enabled ? "enabled" : "disabled"}.`);
 		}
 	});
 
 	function getModifiersAndKey(hotkey) {
 		const [key, ...modifiers] = hotkey.toLowerCase().split("+").reverse();
+
 		return [`${modifiers.map(x => x.trim())
 			.filter(x => ["shift", "ctrl", "alt"].includes(x))
 			.map(x => ({ "shift": "+", "ctrl": "^", "alt": "!" }[x]))
@@ -179,6 +189,7 @@ module.exports = function MacroMaker(mod) {
 		if (macroConfig.hotkeys) {
 			for (let [key, hotkey] of Object.entries(macroConfig.hotkeys)) {
 				if (typeof hotkey !== "object" || hotkey.enabled !== true) continue;
+
 				key = getModifiersAndKey(key).join("");
 
 				if (hotkey.repeater) {
@@ -186,6 +197,7 @@ module.exports = function MacroMaker(mod) {
 				}
 
 				const onPress = (typeof hotkey.onPress === "object" && !Array.isArray(hotkey.onPress)) ? [hotkey.onPress] : hotkey.onPress;
+
 				if (Array.isArray(onPress) && onPress.length) {
 					useInput = true;
 					if (hotkeyActions[key]) {
@@ -193,6 +205,7 @@ module.exports = function MacroMaker(mod) {
 					} else {
 						hotkeyActions[key] = onPress;
 					}
+
 					keys.add(key);
 				}
 			}
@@ -210,6 +223,7 @@ module.exports = function MacroMaker(mod) {
 					}
 
 					const onPress = (typeof hotkey.onPress === "object" && !Array.isArray(hotkey.onPress)) ? [hotkey.onPress] : hotkey.onPress;
+
 					if (Array.isArray(onPress) && onPress.length) {
 						useInput = true;
 						if (hotkeyActions[key]) {
@@ -217,11 +231,13 @@ module.exports = function MacroMaker(mod) {
 						} else {
 							hotkeyActions[key] = onPress;
 						}
+
 						keys.add(key);
 					}
 				}
 
 				const onCast = (typeof hotkey.onCast === "object" && !Array.isArray(hotkey.onCast)) ? [hotkey.onCast] : hotkey.onCast;
+
 				if (Array.isArray(onCast) && onCast.length) {
 					useInput = true;
 					if (skillActions[skill]) {
@@ -242,7 +258,12 @@ module.exports = function MacroMaker(mod) {
 
 		if (repeaterKeys.size) {
 			useRepeater = true;
-			compilerPromises.push(AHK.compileRepeaterAhk(path.join(__dirname, "ahk", `repeater_${selfPid}_${teraPid}.ahk`), teraPid, [...repeaterKeys], macroConfig.toggleRepeaterKey ? getModifiersAndKey(macroConfig.toggleRepeaterKey).join("") : "\\", mod.settings.repeaterStartSuspended));
+			compilerPromises.push(AHK.compileRepeaterAhk(
+				path.join(__dirname, "ahk", `repeater_${selfPid}_${teraPid}.ahk`),
+				teraPid, [...repeaterKeys],
+				macroConfig.toggleRepeaterKey ? getModifiersAndKey(macroConfig.toggleRepeaterKey).join("") : "\\",
+				mod.settings.repeaterStartSuspended
+			));
 		}
 
 		if (useInput || mod.settings.repeaterOnlyInCombat) {
@@ -372,7 +393,13 @@ module.exports = function MacroMaker(mod) {
 			}
 			case "keyrepeat": {
 				mod.setTimeout(() => {
-					ahk.keyRepeat(...modifiersAndKey, action.duration, action.interval, (action.stopOnNextCast && trigger) ? skillBaseId : 0, (action.stopOnNextCast && trigger) ? lastCast : { "skill": 0 });
+					ahk.keyRepeat(
+						...modifiersAndKey,
+						action.duration,
+						action.interval,
+						(action.stopOnNextCast && trigger) ? skillBaseId : 0,
+						(action.stopOnNextCast && trigger) ? lastCast : { "skill": 0 }
+					);
 				}, delay);
 				break;
 			}
@@ -471,7 +498,8 @@ module.exports = function MacroMaker(mod) {
 
 		if (!ahk || event.stage !== 0) return;
 
-		lastCast.skill = skillBaseId;
+		lastCast = { "skill": skillBaseId };
+
 		if (skillActions[skillBaseId]) {
 			skillActions[skillBaseId].forEach(action => handleAction(action, event));
 		}
@@ -479,6 +507,7 @@ module.exports = function MacroMaker(mod) {
 
 	mod.hook("S_ACTION_END", 5, { "order": -Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled || event.gameId !== mod.game.me.gameId) return;
+
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
 		const skillAction = macroConfig ? macroConfig.skills[skillBaseId] : undefined;
 
@@ -551,6 +580,7 @@ module.exports = function MacroMaker(mod) {
 	this.saveState = () => {
 		reloading = true;
 		command.message("Reloading and recompiling macros. Please wait until it's finished reloading.");
+
 		return { macroFile };
 	};
 
@@ -583,6 +613,6 @@ module.exports = function MacroMaker(mod) {
 		if (enterCombatEvent) mod.game.me.off("enter_combat", enterCombatEvent);
 		if (leaveCombatEvent) mod.game.me.off("leave_combat", leaveCombatEvent);
 
-		command.remove(["macro"]);
+		command.remove("macro");
 	};
 };
