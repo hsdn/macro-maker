@@ -41,6 +41,7 @@ module.exports = function MacroMaker(mod) {
 		cooldowns = {},
 		lastCast = {},
 		intervalLocks = {},
+		holdedKeys = {},
 		emulatedSkills = {},
 		enterGameEvent = null,
 		leaveGameEvent = null,
@@ -55,8 +56,6 @@ module.exports = function MacroMaker(mod) {
 		useRepeater = null,
 		useInput = null,
 		compiled = null;
-
-	const holdedKeys = new Map();
 
 	mod.game.initialize("me.abnormalities");
 	AHK.init(mod.settings.ahkPath.replace(/%(.+?)%/g, (_, match) => process.env[match] || _));
@@ -103,7 +102,7 @@ module.exports = function MacroMaker(mod) {
 			cooldowns = {};
 			emulatedSkills = {};
 			intervalLocks = {};
-			holdedKeys.clear();
+			holdedKeys = {};
 		}
 	});
 
@@ -125,12 +124,12 @@ module.exports = function MacroMaker(mod) {
 		debug(type) {
 			if (!type) {
 				debugMode = !debugMode;
-				command.message(`Debug mode is now ${debugMode ? "en" : "dis"}abled.`);
+				command.message(`Debug mode is now ${debugMode ? "enabled" : "disabled"}.`);
 			} else {
 				switch (type.toLowerCase()) {
 					case "abnormal": {
 						abnormalDebug = !abnormalDebug;
-						command.message(`Abnormal debug is now ${abnormalDebug ? "en" : "dis"}abled.`);
+						command.message(`Abnormal debug is now ${abnormalDebug ? "enabled" : "disabled"}.`);
 						break;
 					}
 					default: {
@@ -178,7 +177,6 @@ module.exports = function MacroMaker(mod) {
 		useInput = false;
 
 		if (macroConfig.hotkeys) {
-			// Parse Hotkeys
 			for (let [key, hotkey] of Object.entries(macroConfig.hotkeys)) {
 				if (typeof hotkey !== "object" || hotkey.enabled !== true) continue;
 				key = getModifiersAndKey(key).join("");
@@ -201,7 +199,6 @@ module.exports = function MacroMaker(mod) {
 		}
 
 		if (macroConfig.skills) {
-			// Parse Skills
 			for (const [skill, hotkey] of Object.entries(macroConfig.skills)) {
 				if (typeof hotkey !== "object" || hotkey.enabled !== true) continue;
 
@@ -254,14 +251,14 @@ module.exports = function MacroMaker(mod) {
 		}
 
 		const promise = Promise.all(compilerPromises);
+
 		promise.then(() => {
 			runAhk(useInput, useOutput, useRepeater);
 			compiled = true;
-		})
-			.catch(err => {
-				mod.error(err);
-				compiled = false;
-			});
+		}).catch(err => {
+			mod.error(err);
+			compiled = false;
+		});
 
 		return promise;
 	}
@@ -273,7 +270,7 @@ module.exports = function MacroMaker(mod) {
 		const delay = (action.delay || 0) / (action.fixedDelay === true ? 1 : Math.max(player.aspd, trigger ? trigger.speed : 0));
 		const skillSubIds = (!Array.isArray(action.skillSubId) ? [action.skillSubId] : action.skillSubId).filter(x => !isNaN(x)).map(x => parseInt(x));
 
-		if (!ahk || !actionKey || (!action.inHold && holdedKeys.size !== 0)) return;
+		if (!ahk || !actionKey || (!action.inHold && Object.keys(holdedKeys).length > 0)) return;
 
 		if (trigger && skillSubIds.length > 0 && !skillSubIds.includes(trigger.skill.id % 100)) {
 			return;
@@ -387,40 +384,41 @@ module.exports = function MacroMaker(mod) {
 	}
 
 	function keyPress(skillAction, timeout = 2000) {
-		if (!ahk || holdedKeys.has(skillAction.key)) return;
+		if (!ahk || holdedKeys[skillAction.key]) return;
 
 		ahk.keyDown(...getModifiersAndKey(skillAction.key).reverse());
 
-		holdedKeys.set(skillAction.key,
-			mod.setTimeout(() => {
-				if (holdedKeys.has(skillAction.key)) {
-					ahk.keyUp(...getModifiersAndKey(skillAction.key).reverse());
-					holdedKeys.delete(skillAction.key);
-				}
-			}, skillAction.holdDuration || timeout)
-		);
+		holdedKeys[skillAction.key] = mod.setTimeout(() => {
+			if (holdedKeys[skillAction.key]) {
+				ahk.keyUp(...getModifiersAndKey(skillAction.key).reverse());
+
+				delete holdedKeys[skillAction.key];
+			}
+		}, skillAction.holdDuration || timeout);
 	}
 
 	function keyRelease(skillAction) {
 		if (!ahk) return;
 
-		if (holdedKeys.has(skillAction.key)) {
-			mod.clearTimeout(holdedKeys.get(skillAction.key));
+		if (holdedKeys[skillAction.key]) {
+			mod.clearTimeout(holdedKeys[skillAction.key]);
 			ahk.keyUp(...getModifiersAndKey(skillAction.key).reverse());
-			holdedKeys.delete(skillAction.key);
+
+			delete holdedKeys[skillAction.key];
 		}
 	}
 
 	function keyReleaseAll() {
 		if (!ahk) return;
 
-		holdedKeys.forEach((holdTimer, actionKey) => {
-			mod.clearTimeout(holdTimer);
+		Object.keys(holdedKeys).forEach(actionKey => {
+			mod.clearTimeout(holdedKeys[actionKey]);
 			ahk.keyUp(...getModifiersAndKey(actionKey).reverse());
 		});
 
-		holdedKeys.clear();
+		holdedKeys = {};
 	}
+
 	function runAhk(useInput, useOutput, useRepeater) {
 		if (reloading || ahk) return;
 
@@ -502,6 +500,7 @@ module.exports = function MacroMaker(mod) {
 
 	mod.hook("S_CANNOT_START_SKILL", 4, { "order": -Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled) return;
+
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
 		const skillAction = macroConfig ? macroConfig.skills[skillBaseId] : undefined;
 
@@ -512,17 +511,6 @@ module.exports = function MacroMaker(mod) {
 
 	mod.hook("C_CANCEL_SKILL", 3, { "order": -Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled) return;
-		const skillBaseId = Math.floor(event.skill.id / 1e4);
-		const skillAction = macroConfig ? macroConfig.skills[skillBaseId] : undefined;
-
-		if (skillAction) {
-			keyRelease(skillAction);
-		}
-	});
-
-	/*
-	mod.hook("S_GRANT_SKILL", 3, { "order": -Infinity, "filter": { "fake": null } }, event => {
-		if (!mod.settings.enabled) return;
 
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
 		const skillAction = macroConfig ? macroConfig.skills[skillBaseId] : undefined;
@@ -531,16 +519,17 @@ module.exports = function MacroMaker(mod) {
 			keyRelease(skillAction);
 		}
 	});
-	*/
 
 	mod.hook("S_START_COOLTIME_SKILL", 3, { "order": Infinity }, event => {
 		if (!mod.settings.enabled) return;
+
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
 		cooldowns[skillBaseId] = { "start": Date.now(), "cooldown": event.cooldown };
 	});
 
 	mod.hook("S_DECREASE_COOLTIME_SKILL", 3, { "order": Infinity }, event => {
 		if (!mod.settings.enabled) return;
+
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
 		cooldowns[skillBaseId] = { "start": Date.now(), "cooldown": event.cooldown };
 	});
@@ -548,12 +537,14 @@ module.exports = function MacroMaker(mod) {
 	mod.hook("S_ABNORMALITY_BEGIN", 5, { "order": Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled) return;
 		if (!abnormalDebug || event.target !== mod.game.me.gameId || !(event.id in mod.game.me.abnormalities)) return;
+
 		const abnormality = mod.game.me.abnormalities[event.id];
 		command.message(`${abnormality.data.name || "Unnamed"} (ID: ${abnormality.id} duration: ${abnormality.data.time})`);
 	});
 
 	mod.hook("S_PLAYER_STAT_UPDATE", 17, { "order": Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled) return;
+
 		playerStats = event;
 	});
 
@@ -566,16 +557,17 @@ module.exports = function MacroMaker(mod) {
 	this.loadState = state => {
 		loading = true;
 		macroFile = state.macroFile;
+
 		const promise = compileAndRunMacro();
+
 		if (promise) {
 			promise.then(() => {
 				loading = false;
 				command.message("Finished reloading.");
-			})
-				.catch(() => {
-					loading = false;
-					command.message("Failed to compile macro while reloading.");
-				});
+			}).catch(() => {
+				loading = false;
+				command.message("Failed to compile macro while reloading.");
+			});
 		} else {
 			command.message("Finished reloading.");
 		}
@@ -585,10 +577,12 @@ module.exports = function MacroMaker(mod) {
 		if (ahk) {
 			ahk.destructor();
 		}
+
 		if (enterGameEvent) mod.game.off("enter_game", enterGameEvent);
 		if (leaveGameEvent) mod.game.off("leave_game", leaveGameEvent);
 		if (enterCombatEvent) mod.game.me.off("enter_combat", enterCombatEvent);
 		if (leaveCombatEvent) mod.game.me.off("leave_combat", leaveCombatEvent);
+
 		command.remove(["macro"]);
 	};
 };
