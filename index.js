@@ -2,7 +2,7 @@
 
 /*
 	==========================
-	UPDATED VERSION 29.10.2021
+	UPDATED VERSION 31.10.2021
 	==========================
 */
 
@@ -384,7 +384,7 @@ module.exports = function MacroMaker(mod) {
 			case "keytap": {
 				mod.setTimeout(() => {
 					if (action.holdDuration || (skillAction && skillAction.chargeStages)) {
-						keyPress(skillAction);
+						keyPress(skillAction, action.holdDuration || 2000);
 					} else {
 						ahk.keyTap(...modifiersAndKey);
 					}
@@ -410,7 +410,7 @@ module.exports = function MacroMaker(mod) {
 		}
 	}
 
-	function keyPress(skillAction, timeout = 2000) {
+	function keyPress(skillAction, timeout) {
 		if (!ahk || holdedKeys[skillAction.key]) return;
 
 		ahk.keyDown(...getModifiersAndKey(skillAction.key).reverse());
@@ -421,7 +421,7 @@ module.exports = function MacroMaker(mod) {
 
 				delete holdedKeys[skillAction.key];
 			}
-		}, skillAction.holdDuration || timeout);
+		}, timeout);
 	}
 
 	function keyRelease(skillAction) {
