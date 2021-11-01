@@ -505,8 +505,14 @@ module.exports = function MacroMaker(mod) {
 		}
 	});
 
-	mod.hook("S_ACTION_END", 5, { "order": -Infinity, "filter": { "fake": null } }, event => {
+	mod.hook("S_ACTION_END", 5, { "order": -Infinity, "filter": { "fake": null } }, (event, fake) => {
 		if (!mod.settings.enabled || event.gameId !== mod.game.me.gameId) return;
+
+		if (!(event.skill.id in emulatedSkills)) {
+			emulatedSkills[event.skill.id] = fake;
+		} else if (emulatedSkills[event.skill.id] !== fake) {
+			return;
+		}
 
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
 		const skillAction = macroConfig ? macroConfig.skills[skillBaseId] : undefined;
@@ -516,7 +522,7 @@ module.exports = function MacroMaker(mod) {
 		}
 	});
 
-	mod.hook("C_PRESS_SKILL", 4, { "order": -Infinity, "filter": { "fake": null } }, event => {
+	mod.hook("C_PRESS_SKILL", 4, { "order": -Infinity }, event => {
 		if (!mod.settings.enabled) return;
 
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
@@ -527,7 +533,7 @@ module.exports = function MacroMaker(mod) {
 		}
 	});
 
-	mod.hook("S_CANNOT_START_SKILL", 4, { "order": -Infinity, "filter": { "fake": null } }, event => {
+	mod.hook("S_CANNOT_START_SKILL", 4, { "order": -Infinity }, event => {
 		if (!mod.settings.enabled) return;
 
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
@@ -538,7 +544,7 @@ module.exports = function MacroMaker(mod) {
 		}
 	});
 
-	mod.hook("C_CANCEL_SKILL", 3, { "order": -Infinity, "filter": { "fake": null } }, event => {
+	mod.hook("C_CANCEL_SKILL", 3, { "order": -Infinity }, event => {
 		if (!mod.settings.enabled) return;
 
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
