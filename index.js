@@ -42,6 +42,7 @@ module.exports = function MacroMaker(mod) {
 		lastCast = {},
 		intervalLocks = {},
 		holdedKeys = {},
+		releaseTimers = {},
 		emulatedSkills = {},
 		enterGameEvent = null,
 		leaveGameEvent = null,
@@ -503,6 +504,11 @@ module.exports = function MacroMaker(mod) {
 		if (skillActions[skillBaseId]) {
 			skillActions[skillBaseId].forEach(action => handleAction(action, event));
 		}
+
+		if (releaseTimers[skillBaseId]) {
+			mod.clearTimeout(releaseTimers[skillBaseId]);
+			delete releaseTimers[skillBaseId];
+		}
 	});
 
 	mod.hook("S_ACTION_END", 5, { "order": -Infinity, "filter": { "fake": null } }, (event, fake) => {
@@ -518,7 +524,12 @@ module.exports = function MacroMaker(mod) {
 		const skillAction = macroConfig ? macroConfig.skills[skillBaseId] : undefined;
 
 		if (skillAction) {
-			keyRelease(skillAction);
+			if (releaseTimers[skillBaseId]) {
+				mod.clearTimeout(releaseTimers[skillBaseId]);
+				delete releaseTimers[skillBaseId];
+			}
+
+			releaseTimers[skillBaseId] = mod.setTimeout(() => keyRelease(skillAction), 100 / player.aspd);
 		}
 	});
 
@@ -540,7 +551,12 @@ module.exports = function MacroMaker(mod) {
 		const skillAction = macroConfig ? macroConfig.skills[skillBaseId] : undefined;
 
 		if (skillAction) {
-			keyRelease(skillAction);
+			if (releaseTimers[skillBaseId]) {
+				mod.clearTimeout(releaseTimers[skillBaseId]);
+				delete releaseTimers[skillBaseId];
+			}
+
+			releaseTimers[skillBaseId] = mod.setTimeout(() => keyRelease(skillAction), 300 / player.aspd);
 		}
 	});
 
@@ -551,6 +567,11 @@ module.exports = function MacroMaker(mod) {
 		const skillAction = macroConfig ? macroConfig.skills[skillBaseId] : undefined;
 
 		if (skillAction) {
+			if (releaseTimers[skillBaseId]) {
+				mod.clearTimeout(releaseTimers[skillBaseId]);
+				delete releaseTimers[skillBaseId];
+			}
+
 			keyRelease(skillAction);
 		}
 	});
