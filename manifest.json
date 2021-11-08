@@ -1,9 +1,9 @@
 {
     "files": {
         "README.md": "49508382bb2423cfa622d7e2e92d45e05e879fa503cffdfe5f944f0518f0494b",
-        "index.js": "7b1b208dd09d170a36272691f4bbf536ddcaf90ae1150e4385e1035727a5b0dd",
+        "index.js": "d2c9e1e8df921c01ed9449cd529d4cd5d397e2852b11dfb8664af5daa37403a0",
         "lib/ahk.js": "d859c0c94dac13fcf1b9d832cbd64ae9a65c86df874928bdff4d2df3ad549b76",
-        "module.json": "a0d24ceef4cb4e580ace814279db366e2a090cc1aea93288fc6ef96f6420f845",
+        "module.json": "05a48d4dad8271d70e5fe0bfbf689ee9821830b55d0c886230f786b4c33e75ea",
         "settings_migrator.js": "af3a09a7c586f440d634510752d2d65801d86333c426f1bfda41267d8bb65af5"
     },
     "defs": {

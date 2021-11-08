@@ -556,7 +556,7 @@ module.exports = function MacroMaker(mod) {
 				delete releaseTimers[skillBaseId];
 			}
 
-			releaseTimers[skillBaseId] = mod.setTimeout(() => keyRelease(skillAction), 300 / player.aspd);
+			keyRelease(skillAction);
 		}
 	});
 

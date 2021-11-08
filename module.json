@@ -3,7 +3,7 @@
     "name": "Macro-Maker",
     "author": "Matt / JKQ",
     "description": "Module to help you make macros for any class, using only AHK with no other dependency.",
-    "version": "11/7/2021",
+    "version": "11/8/2021",
     "options": {
         "reloadable": true,
         "settingsVersion": 1,
