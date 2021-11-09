@@ -1,20 +1,20 @@
 {
     "files": {
         "README.md": "49508382bb2423cfa622d7e2e92d45e05e879fa503cffdfe5f944f0518f0494b",
-        "index.js": "d2c9e1e8df921c01ed9449cd529d4cd5d397e2852b11dfb8664af5daa37403a0",
-        "lib/ahk.js": "d859c0c94dac13fcf1b9d832cbd64ae9a65c86df874928bdff4d2df3ad549b76",
-        "module.json": "05a48d4dad8271d70e5fe0bfbf689ee9821830b55d0c886230f786b4c33e75ea",
+        "index.js": "1dcb557f25f0b226216d002903ea97ca5e37bb0a699f1e55dbd91534ed470570",
+        "lib/ahk.js": "a37a6536fc7b6ec2da4531bc044ffe08f377b978e42be6f89e84c7ba430bcd04",
+        "module.json": "ae82ee0a6dc02abb4ef3e1cab1ebf916f0546a5cba830157b217cf23dd4de9f3",
         "settings_migrator.js": "af3a09a7c586f440d634510752d2d65801d86333c426f1bfda41267d8bb65af5"
     },
     "defs": {
         "C_CANCEL_SKILL": 3,
         "C_PRESS_SKILL": 4,
-        "S_ABNORMALITY_BEGIN": 5,
+        "S_ABNORMALITY_BEGIN": [3,5],
         "S_ACTION_END": 5,
         "S_ACTION_STAGE": 9,
         "S_CANNOT_START_SKILL": 4,
         "S_DECREASE_COOLTIME_SKILL": 3,
-        "S_PLAYER_STAT_UPDATE": 17,
+        "S_PLAYER_STAT_UPDATE": [13,17],
         "S_START_COOLTIME_SKILL": 3
     }
 }
