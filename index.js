@@ -62,6 +62,9 @@ module.exports = function MacroMaker(mod) {
 	AHK.init(mod.settings.ahkPath.replace(/%(.+?)%/g, (_, match) => process.env[match] || _));
 
 	let regexOut = null;
+	if (!fs.existsSync(path.join(__dirname, "ahk"))){
+		fs.mkdirSync(path.join(__dirname, "ahk"));
+	}
 	fs.readdirSync(path.join(__dirname, "ahk"))
 		.filter(x => path.extname(x) === ".ahk" && (!(regexOut = /[a-z]+_(\d+)_\d+/g.exec(path.basename(x))) || regexOut[1] != selfPid))
 		.forEach(file => {
