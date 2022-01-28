@@ -38,6 +38,7 @@ module.exports = function MacroMaker(mod) {
 		playerStats = {},
 		reloading = false,
 		loading = false,
+		cooldownInterval = null,
 		cooldowns = {},
 		lastCast = {},
 		intervalLocks = {},
@@ -61,10 +62,11 @@ module.exports = function MacroMaker(mod) {
 	mod.game.initialize("me.abnormalities");
 	AHK.init(mod.settings.ahkPath.replace(/%(.+?)%/g, (_, match) => process.env[match] || _));
 
-	let regexOut = null;
-	if (!fs.existsSync(path.join(__dirname, "ahk"))){
+	if (!fs.existsSync(path.join(__dirname, "ahk"))) {
 		fs.mkdirSync(path.join(__dirname, "ahk"));
 	}
+
+	let regexOut = null;
 	fs.readdirSync(path.join(__dirname, "ahk"))
 		.filter(x => path.extname(x) === ".ahk" && (!(regexOut = /[a-z]+_(\d+)_\d+/g.exec(path.basename(x))) || regexOut[1] != selfPid))
 		.forEach(file => {
@@ -579,19 +581,36 @@ module.exports = function MacroMaker(mod) {
 		}
 	});
 
-	mod.hook("S_START_COOLTIME_SKILL", 3, { "order": Infinity }, event => {
+	mod.hook("S_START_COOLTIME_SKILL", 3, { "order": Infinity }, sStartCooltimeSkill);
+	mod.hook("S_DECREASE_COOLTIME_SKILL", 3, { "order": Infinity }, sStartCooltimeSkill);
+
+	function sStartCooltimeSkill(event) {
 		if (!mod.settings.enabled) return;
 
 		const skillBaseId = Math.floor(event.skill.id / 1e4);
 		cooldowns[skillBaseId] = { "start": Date.now(), "cooldown": event.cooldown };
-	});
 
-	mod.hook("S_DECREASE_COOLTIME_SKILL", 3, { "order": Infinity }, event => {
-		if (!mod.settings.enabled) return;
+		if (cooldownInterval === null) {
+			let now = Date.now();
 
-		const skillBaseId = Math.floor(event.skill.id / 1e4);
-		cooldowns[skillBaseId] = { "start": Date.now(), "cooldown": event.cooldown };
-	});
+			cooldownInterval = mod.setInterval(() => {
+				Object.keys(cooldowns).forEach(skillId => {
+					if (cooldowns[skillId].start + cooldowns[skillId].cooldown <= Date.now()) {
+						delete cooldowns[skillId];
+					} else if (mod.game.me.status === 2) {
+						cooldowns[skillId].start -= Date.now() - now;
+					}
+				});
+
+				if (cooldowns.length === 0) {
+					mod.clearInterval(cooldownInterval);
+					cooldownInterval = null;
+				}
+
+				now = Date.now();
+			}, 1000);
+		}
+	}
 
 	mod.hook("S_ABNORMALITY_BEGIN", mod.majorPatchVersion === 92 ? 3 : 5, { "order": Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled) return;
