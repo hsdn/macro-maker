@@ -582,7 +582,7 @@ module.exports = function MacroMaker(mod) {
 	});
 
 	mod.hook("S_START_COOLTIME_SKILL", mod.majorPatchVersion >= 114 ? 4 : 3, { "order": Infinity }, sStartCooltimeSkill);
-	mod.hook("S_DECREASE_COOLTIME_SKILL", 3, { "order": Infinity }, sStartCooltimeSkill);
+	mod.hook("S_DECREASE_COOLTIME_SKILL", mod.majorPatchVersion >= 114 ? 4 : 3, { "order": Infinity }, sStartCooltimeSkill);
 
 	function sStartCooltimeSkill(event) {
 		if (!mod.settings.enabled) return;
