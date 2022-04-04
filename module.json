@@ -1,9 +1,7 @@
 {
-    "disableAutoUpdate": false,
-    "name": "Macro-Maker",
-    "author": "Matt / JKQ",
+    "name": "macro-maker",
+    "author": "Matt / HSDN",
     "description": "Module to help you make macros for any class, using only AHK with no other dependency.",
-    "version": "2/20/2022",
     "options": {
         "reloadable": true,
         "settingsVersion": 1,
@@ -13,5 +11,7 @@
     "dependencies": {
         "library": "https://raw.githubusercontent.com/tera-toolbox-mods/library/master/module.json"
     },
-    "servers": ["http://git.dev.hsdn.org/tera/macro-maker/raw/master/"]
+    "servers": ["http://git.dev.hsdn.org/tera/macro-maker/raw/master/"],
+    "version": "4/4/2022",
+    "disableAutoUpdate": false
 }
