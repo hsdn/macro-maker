@@ -2,7 +2,7 @@
     "files": {
         "README.md": "49508382bb2423cfa622d7e2e92d45e05e879fa503cffdfe5f944f0518f0494b",
         "index.js": "6faf5499b51395986c9e289f26502d7adbb66b67f9ecffcb16e598f40061afee",
-        "lib/ahk.js": "a37a6536fc7b6ec2da4531bc044ffe08f377b978e42be6f89e84c7ba430bcd04",
+        "lib/ahk.js": "8d0e91df5f40cba005693425fba9267c7a5d28c67839ca4e3c66f9f0808ae8e6",
         "macros/Archer.js": {
             "overwrite": false,
             "hash": "311c5a52bb914367bbc5fd43f0b467a8bc8e4dbcefab90e4fb69d9c326aaa1ea"
