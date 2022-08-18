@@ -2,7 +2,7 @@
 
 /*
 	==========================
-	UPDATED VERSION 09.11.2021
+	UPDATED VERSION 18.08.2022
 	==========================
 */
 
@@ -612,7 +612,7 @@ module.exports = function MacroMaker(mod) {
 		}
 	}
 
-	mod.hook("S_ABNORMALITY_BEGIN", mod.majorPatchVersion === 92 ? 3 : 5, { "order": Infinity, "filter": { "fake": null } }, event => {
+	mod.hook("S_ABNORMALITY_BEGIN", mod.majorPatchVersion >= 75 ? 4 : 3, { "order": Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled) return;
 		if (!abnormalDebug || event.target !== mod.game.me.gameId || !(event.id in mod.game.me.abnormalities)) return;
 
@@ -620,7 +620,7 @@ module.exports = function MacroMaker(mod) {
 		command.message(`${abnormality.data.name || "Unnamed"} (ID: ${abnormality.id} duration: ${abnormality.data.time})`);
 	});
 
-	mod.hook("S_PLAYER_STAT_UPDATE", mod.majorPatchVersion === 92 ? 13 : 17, { "order": Infinity, "filter": { "fake": null } }, event => {
+	mod.hook("S_PLAYER_STAT_UPDATE", mod.majorPatchVersion >= 93 ? 14 : 13, { "order": Infinity, "filter": { "fake": null } }, event => {
 		if (!mod.settings.enabled) return;
 
 		playerStats = event;

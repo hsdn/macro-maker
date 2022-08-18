@@ -1,20 +1,72 @@
 {
     "files": {
         "README.md": "49508382bb2423cfa622d7e2e92d45e05e879fa503cffdfe5f944f0518f0494b",
-        "index.js": "1989c27f4b2fee30aaf706ddcb78856be92af78a103cf5f92720713ee4f7806b",
+        "index.js": "6faf5499b51395986c9e289f26502d7adbb66b67f9ecffcb16e598f40061afee",
         "lib/ahk.js": "a37a6536fc7b6ec2da4531bc044ffe08f377b978e42be6f89e84c7ba430bcd04",
-        "module.json": "05a10552a006e11916886d0dcddc4e96845a581b7d42d31bc7aa8d20d097262f",
+        "macros/Archer.js": {
+            "overwrite": false,
+            "hash": "311c5a52bb914367bbc5fd43f0b467a8bc8e4dbcefab90e4fb69d9c326aaa1ea"
+        },
+        "macros/Berserker.js": {
+            "overwrite": false,
+            "hash": "a6435426b8be8d45644b34d1c949b5d7d1c17fa7503c7ea50eb535cb68b09355"
+        },
+        "macros/Brawler.js": {
+            "overwrite": false,
+            "hash": "fa402d0cc06a760929a8ba50881b577badc1f65dc293a63fc98d030265e6cd91"
+        },
+        "macros/Gunner.js": {
+            "overwrite": false,
+            "hash": "defb52140b048219b8fb995dcbc99fc2a9ef0a37c68cc447321b52f3339a4922"
+        },
+        "macros/Lancer.js": {
+            "overwrite": false,
+            "hash": "f9e69915143c70913a4de388e0762412482a8379686c5f80032d83c9dbeeb271"
+        },
+        "macros/Mystic.js": {
+            "overwrite": false,
+            "hash": "bb35c409e12f6ef361d3fb1fabe90685f4996cf67b78eb6373750b697076326b"
+        },
+        "macros/Ninja.js": {
+            "overwrite": false,
+            "hash": "4133ebf5b4a98867ecb1a200b96a00b311eae6f119245dfa5053fc4c8ca0acd7"
+        },
+        "macros/Priest.js": {
+            "overwrite": false,
+            "hash": "dda4a0f76b85a8493f496fc8e9e8a219c49f5d26c3dce4322ed5d3be48d7c57a"
+        },
+        "macros/Reaper.js": {
+            "overwrite": false,
+            "hash": "d0d07866960f6eff4ca86e16a87cf561b121d4ec39e186bf6c55c70fa8c70bb5"
+        },
+        "macros/Slayer.js": {
+            "overwrite": false,
+            "hash": "e6abec299ec0fd194adf8e8c2c1fc5eeb1874b5cd259b1456200346e865cc083"
+        },
+        "macros/Sorcerer.js": {
+            "overwrite": false,
+            "hash": "4a8d41871ab0012b471d154264ef0beeea3a3b9546ce75245d754b1752c46b7b"
+        },
+        "macros/Valkyrie.js": {
+            "overwrite": false,
+            "hash": "109794c06a2be1e97efd57a2ddb7e932c0f94e961131dc22e8a724ba645b4a6a"
+        },
+        "macros/Warrior.js": {
+            "overwrite": false,
+            "hash": "4c7a59ac37cd2914c85abf341f009aa886e08f174e212132bf7ab6a490b0ba91"
+        },
+        "module.json": "5a35b4033738bbcabb7f2d638dd74e5625133fdef2864a36cfab76d4b272db8a",
         "settings_migrator.js": "af3a09a7c586f440d634510752d2d65801d86333c426f1bfda41267d8bb65af5"
     },
     "defs": {
         "C_CANCEL_SKILL": 3,
         "C_PRESS_SKILL": 4,
-        "S_ABNORMALITY_BEGIN": [3,5],
+        "S_ABNORMALITY_BEGIN": [3,4],
         "S_ACTION_END": 5,
         "S_ACTION_STAGE": 9,
         "S_CANNOT_START_SKILL": 4,
         "S_DECREASE_COOLTIME_SKILL": 3,
-        "S_PLAYER_STAT_UPDATE": [13,17],
+        "S_PLAYER_STAT_UPDATE": [13,14],
         "S_START_COOLTIME_SKILL": 3
     }
 }

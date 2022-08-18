@@ -12,6 +12,6 @@
         "library": "https://raw.githubusercontent.com/tera-toolbox-mods/library/master/module.json"
     },
     "servers": ["http://git.dev.hsdn.org/tera/macro-maker/raw/master/"],
-    "version": "4/4/2022",
+    "version": "8/18/2022",
     "disableAutoUpdate": false
 }
