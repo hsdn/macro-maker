@@ -3,6 +3,8 @@
     "author": "Matt / HSDN",
     "description": "Module to help you make macros for any class, using only AHK with no other dependency.",
     "options": {
+        "cliName": "Macro Maker",
+        "guiName": "Macro Maker Updated",
         "reloadable": true,
         "settingsVersion": 1,
         "settingsFile": "config.json",
