@@ -11,9 +11,9 @@
         "settingsMigrator": "settings_migrator.js"
     },
     "dependencies": {
-        "library": "https://raw.githubusercontent.com/tera-toolbox-mods/library/master/module.json"
+        "library": "https://raw.githubusercontent.com/tera-private-toolbox/library/master/module.json"
     },
-    "servers": ["http://git.dev.hsdn.org/tera/macro-maker/raw/master/"],
-    "version": "8/18/2022",
+    "servers": ["https://git.teramods.ml/tera/macro-maker/raw/master/"],
+    "version": "11/22/2022",
     "disableAutoUpdate": false
 }
