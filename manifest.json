@@ -2,7 +2,7 @@
     "files": {
         "README.md": "49508382bb2423cfa622d7e2e92d45e05e879fa503cffdfe5f944f0518f0494b",
         "index.js": "6faf5499b51395986c9e289f26502d7adbb66b67f9ecffcb16e598f40061afee",
-        "lib/ahk.js": "8d0e91df5f40cba005693425fba9267c7a5d28c67839ca4e3c66f9f0808ae8e6",
+        "lib/ahk.js": "c3b4286c095f0967e1789817ca088408f1327daabb0a0b7ae019772fe0db0200",
         "macros/Archer.js": {
             "overwrite": false,
             "hash": "311c5a52bb914367bbc5fd43f0b467a8bc8e4dbcefab90e4fb69d9c326aaa1ea"
@@ -55,7 +55,7 @@
             "overwrite": false,
             "hash": "4c7a59ac37cd2914c85abf341f009aa886e08f174e212132bf7ab6a490b0ba91"
         },
-        "module.json": "08525e54271b6f9cac1fbade3d5fca5b7a0ec1bea27b64ce8b275b70cba30b6c",
+        "module.json": "be16b4adee771a55fce265e395d7e8b6a9e56e70d8e10581e1588144800d5caa",
         "settings_migrator.js": "af3a09a7c586f440d634510752d2d65801d86333c426f1bfda41267d8bb65af5"
     },
     "defs": {
