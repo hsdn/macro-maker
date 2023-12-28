@@ -13,7 +13,7 @@
     "dependencies": {
         "library": "https://raw.githubusercontent.com/tera-private-toolbox/library/master/module.json"
     },
-    "servers": ["https://git.teragame.su/tera/macro-maker/raw/master/"],
-    "version": "7/20/2023",
+    "servers": ["https://raw.githubusercontent.com/hsdn/macro-maker/master/","https://git.teragame.su/tera/macro-maker/raw/master/"],
+    "version": "12/28/2023",
     "disableAutoUpdate": false
 }
